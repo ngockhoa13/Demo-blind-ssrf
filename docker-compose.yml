@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "8012:80"  # Vẫn giữ cổng xuất bản
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: shop
+      DB_USER: root
+      DB_PASS: password
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shop
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  shellshock:
+    build: ./shellshock
+    ports:
+      - "8888:80"  # Cũng xuất bản cổng cho shellshock
